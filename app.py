@@ -12,13 +12,13 @@ tf.keras.config.enable_unsafe_deserialization()
 # Required for loading custom model
 @register_keras_serializable()
 def custom_preprocess(x):
-    from tensorflow.keras.applications.efficientnet import preprocess_input
+    from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
     return preprocess_input(x)
 
 app = Flask(__name__)
 
 # Load model and labels
-model = tf.keras.models.load_model('best_model.keras')
+model = tf.keras.models.load_model('mobilenetv2_model.keras')
 with open('EfficientNetB0_labels.json', 'r') as f:
     class_names = json.load(f)
 
@@ -49,6 +49,3 @@ def predict():
             'all_predictions': dict(zip(class_names, predictions[0].astype(float)))})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
